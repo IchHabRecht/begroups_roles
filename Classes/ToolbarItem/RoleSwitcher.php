@@ -104,17 +104,22 @@ class Tx_BegroupsRoles_ToolbarItem_RoleSwitcher implements backend_toolbarItem {
 	}
 
 	/**
+	 * Sets the new user group by ajax request
+	 *
 	 * @return bool
 	 */
 	public function setUserGroup() {
-		$userGroup = t3lib_div::_GP('userGroup');
-		$userRecord = t3lib_BEfunc::getRecord('be_users', $GLOBALS['BE_USER']->user['uid']);
-		if (!t3lib_div::inList($userRecord[$GLOBALS['BE_USER']->usergroup_column], $userGroup)) {
-			return FALSE;
-		}
-		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', $userGroup);
+		$userGroup = (int) t3lib_div::_GP('userGroup');
+		if ($userGroup > 0) {
+			$userRecord = t3lib_BEfunc::getRecord('be_users', $GLOBALS['BE_USER']->user['uid']);
+			if (t3lib_div::inList($userRecord[$GLOBALS['BE_USER']->usergroup_column], $userGroup)) {
+				$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', $userGroup);
 
-		return TRUE;
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }
 
