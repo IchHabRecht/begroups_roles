@@ -65,7 +65,6 @@ class Tx_BegroupsRoles_ToolbarItem_RoleSwitcher implements backend_toolbarItem {
 	 */
 	public function render() {
 		$this->addJavascriptToBackend();
-		$userRecord = t3lib_BEfunc::getRecord('be_users', $GLOBALS['BE_USER']->user['uid']);
 		$userGroups = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'uid, title',
 			'be_groups',
@@ -82,7 +81,10 @@ class Tx_BegroupsRoles_ToolbarItem_RoleSwitcher implements backend_toolbarItem {
 		unset($group);
 
 		return t3lib_iconWorks::getSpriteIcon('extensions-begroups-roles-switchUserGroup') .
-			' <select name="tx-begroupsroles-usergroup">' . $options . '</select>';
+			' <select name="tx-begroupsroles-usergroup" style="margin-right: 10px;">' .
+				'<option value="0">' . $GLOBALS['LANG']->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xml:all', 1) . '</option>' .
+				$options .
+			'</select>';
 	}
 
 	/**
@@ -110,16 +112,18 @@ class Tx_BegroupsRoles_ToolbarItem_RoleSwitcher implements backend_toolbarItem {
 	 */
 	public function setUserGroup() {
 		$userGroup = (int) t3lib_div::_GP('userGroup');
-		if ($userGroup > 0) {
+		if ($userGroup <= 0) {
+			$userGroup = 0;
+		} else {
 			$userRecord = t3lib_BEfunc::getRecord('be_users', $GLOBALS['BE_USER']->user['uid']);
-			if (t3lib_div::inList($userRecord[$GLOBALS['BE_USER']->usergroup_column], $userGroup)) {
-				$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', $userGroup);
-
-				return TRUE;
+			if (!t3lib_div::inList($userRecord[$GLOBALS['BE_USER']->usergroup_column], $userGroup)) {
+				$userGroup = 0;
 			}
 		}
 
-		return FALSE;
+		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', $userGroup);
+
+		return TRUE;
 	}
 }
 

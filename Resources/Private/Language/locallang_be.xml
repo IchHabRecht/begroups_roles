@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<meta type="array">
-		<description>Labels for tables in begroups_roles.</description>
+		<description>Labels for backend of begroups_roles.</description>
 		<type>database</type>
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="be_users.tx_begroupsroles_enabled">Use usergroups as roles</label>
+			<label index="all">All</label>
 		</languageKey>
 		<languageKey index="de" type="array">
-			<label index="be_users.tx_begroupsroles_enabled">Benutzergruppen als Rollen verwenden</label>
+			<label index="all">Alle</label>
 		</languageKey>
 	</data>
 </T3locallang>

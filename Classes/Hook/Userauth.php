@@ -37,14 +37,14 @@ class Tx_BegroupsRoles_Hook_Userauth {
 			&& strpos($GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column], ',') !== FALSE)
 		{
 			$sessionData = unserialize($GLOBALS['BE_USER']->user['ses_data']);
-			if (empty($sessionData['tx_begroupsroles_role'])
-				|| !t3lib_div::inList($GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column], (int) $sessionData['tx_begroupsroles_role']))
+			if (!empty($sessionData['tx_begroupsroles_role'])
+				&& t3lib_div::inList($GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column], (int) $sessionData['tx_begroupsroles_role']))
 			{
-				$userGroups = t3lib_div::intExplode(',', $GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column]);
-				$sessionData['tx_begroupsroles_role'] = $userGroups[0];
-				$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', $userGroups[0]);
+				$GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column] = $sessionData['tx_begroupsroles_role'];
+			} else {
+				$sessionData['tx_begroupsroles_role'] = 0;
+				$GLOBALS['BE_USER']->setAndSaveSessionData('tx_begroupsroles_role', 0);
 			}
-			$GLOBALS['BE_USER']->user[$GLOBALS['BE_USER']->usergroup_column] = $sessionData['tx_begroupsroles_role'];
 		}
 	}
 }
