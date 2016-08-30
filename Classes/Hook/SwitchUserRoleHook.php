@@ -48,6 +48,7 @@ class SwitchUserRoleHook
                 && GeneralUtility::inList($backendUser->user[$backendUser->usergroup_column], $role)
             ) {
                 $backendUser->user[$backendUser->usergroup_column] = $role;
+                $backendUser->user['admin'] = 0;
             } else {
                 $backendUser->setAndSaveSessionData('tx_begroupsroles_role', 0);
             }
