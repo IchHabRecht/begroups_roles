@@ -25,11 +25,15 @@ namespace CPSIT\BegroupsRoles\Backend\ToolbarItems;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
@@ -70,6 +74,8 @@ class RoleSwitcher implements ToolbarItemInterface
             '',
             'uid'
         );
+
+        $this->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher');
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $title = $this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:switch_group');
@@ -152,6 +158,30 @@ class RoleSwitcher implements ToolbarItemInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function switchRoleAction(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        $backendUser = $this->getBackendUser();
+
+        $role = (int)GeneralUtility::_POST('role');
+        if ($role <= 0) {
+            $role = 0;
+        } else {
+            $userRecord = BackendUtility::getRecord('be_users', $backendUser->user['uid']);
+            if (!GeneralUtility::inList($userRecord[$backendUser->usergroup_column], $role)) {
+                $role = 0;
+            }
+        }
+
+        $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $role);
+
+        return $response;
+    }
+
+    /**
      * @return BackendUserAuthentication
      */
     protected function getBackendUser()
@@ -173,5 +203,13 @@ class RoleSwitcher implements ToolbarItemInterface
     protected function getLanguageService()
     {
         return $GLOBALS['LANG'];
+    }
+
+    /**
+     * @return PageRenderer
+     */
+    protected function getPageRenderer()
+    {
+        return GeneralUtility::makeInstance(PageRenderer::class);
     }
 }
