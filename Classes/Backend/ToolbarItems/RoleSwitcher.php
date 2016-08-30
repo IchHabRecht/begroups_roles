@@ -54,8 +54,22 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function checkAccess()
     {
-        return !empty($this->getBackendUser()->user['tx_begroupsroles_enabled'])
-            && strpos($this->getBackendUser()->user[$this->getBackendUser()->usergroup_column], ',') !== false;
+        // The raw user record is needed to check for proper group settings
+        $backendUser = $this->getBackendUser();
+        $userRecord = BackendUtility::getRecord($backendUser->user_table, $backendUser->user['uid']);
+
+        $this->groups = $this->getDatabaseConnection()->exec_SELECTgetRows(
+            'uid, title',
+            $backendUser->usergroup_table,
+            'uid IN (' . $this->getDatabaseConnection()->cleanIntList($userRecord[$backendUser->usergroup_column]) . ')',
+            '',
+            'title ASC',
+            '',
+            'uid'
+        );
+
+        return !empty($userRecord['tx_begroupsroles_enabled'])
+            && strpos($userRecord[$backendUser->usergroup_column], ',') !== false;
     }
 
     /**
@@ -65,16 +79,6 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function getItem()
     {
-        $this->groups = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'uid, title',
-            'be_groups',
-            'uid IN (' . $this->getDatabaseConnection()->cleanIntList($this->getBackendUser()->user[$this->getBackendUser()->usergroup_column]) . ')',
-            '',
-            'title ASC',
-            '',
-            'uid'
-        );
-
         $this->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher');
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
