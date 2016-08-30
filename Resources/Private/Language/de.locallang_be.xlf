@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2016-08-30T17:52:40Z" product-name="begroups_roles">
+		<header />
+		<body>
+			<trans-unit id="switch_group">
+				<target>Gruppe wechseln</target>
+			</trans-unit>
+			<trans-unit id="all_groups">
+				<target>Alle Gruppen</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
