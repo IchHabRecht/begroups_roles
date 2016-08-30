@@ -103,20 +103,29 @@ class RoleSwitcher implements ToolbarItemInterface
     {
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $groupIcon = $iconFactory->getIcon('status-user-group-backend', Icon::SIZE_SMALL)->render('inline');
+        $role = $this->getBackendUser()->getSessionData('tx_begroupsroles_role');
 
         $result = [];
         $result[] = '<ul class="dropdown-list">';
-        $result[] = '<li>';
-        $result[] = '<a href="#" class="dropdown-list-link">' . $groupIcon . ' '
-            . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
-            . '</a>';
-        $result[] = '</li>';
 
-        foreach ($this->groups as $group) {
+        if (!empty($role)) {
             $result[] = '<li>';
-            $result[] = '<a href="#" class="dropdown-list-link">' . $groupIcon . ' ' . htmlspecialchars($group['title']) . '</a>';
+            $result[] = '<a href="#" class="dropdown-list-link" data-role="0">' . $groupIcon . ' '
+                . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
+                . '</a>';
             $result[] = '</li>';
         }
+
+        foreach ($this->groups as $group) {
+            if ((int)$role !== (int)$group['uid']) {
+                $result[] = '<li>';
+                $result[] = '<a href="#" class="dropdown-list-link" data-role="' . (int)$group['uid'] . '">'
+                    . $groupIcon . ' ' . htmlspecialchars($group['title'])
+                    . '</a>';
+                $result[] = '</li>';
+            }
+        }
+
         $result[] = '</ul>';
 
         return implode(LF, $result);
