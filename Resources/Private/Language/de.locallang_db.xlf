@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2016-08-30T16:54:31Z" product-name="begroups_roles">
+		<header />
+		<body>
+			<trans-unit id="be_users.tx_begroupsroles_enabled">
+				<target>Gruppen als Rollen verwenden</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
