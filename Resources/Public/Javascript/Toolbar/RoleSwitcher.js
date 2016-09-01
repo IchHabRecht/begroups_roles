@@ -1,8 +1,7 @@
-<?php
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Nicole Cordes <cordes@cps-it.de>, CPS-IT GmbH
+ *  (c) 2016 Nicole Cordes <cordes@cps-it.de>, CPS-IT GmbH
  *
  *  All rights reserved
  *
@@ -23,13 +22,26 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
-}
+/**
+ * Module: TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher
+ */
+define(['jquery'], function($) {
+	'use strict';
 
-if (TYPO3_MODE === 'BE') {
-	require_once(t3lib_extMgm::extPath('begroups_roles') . 'Classes/ToolbarItem/RoleSwitcher.php');
-	$GLOBALS['TYPO3backend']->addToolbarItem('roleSwitcher', 'Tx_BegroupsRoles_ToolbarItem_RoleSwitcher');
-}
+	$(
+		$('#cpsit-begroupsroles-backend-toolbaritems-roleswitcher').on('click', '.dropdown-menu a', function(evt) {
+			evt.preventDefault();
+			$.ajax({
+				url: TYPO3.settings.ajaxUrls['role_switch'],
+				type: 'post',
+				data: {
+					role: $(this).data('role')
+				},
+				complete: function() {
+					location.reload();
+				}
+			});
+		})
+	);
 
-?>
+});
