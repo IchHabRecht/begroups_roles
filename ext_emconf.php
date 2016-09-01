@@ -37,11 +37,6 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'autoload' => array(
-		'psr-4' => array(
-			'CPSIT\\BegroupsRoles\\' => 'Classes/',
-		),
-	),
 	'_md5_values_when_last_written' => 'a:11:{s:9:"ChangeLog";s:4:"1acc";s:12:"ext_icon.gif";s:4:"c9bc";s:14:"ext_tables.php";s:4:"1336";s:14:"ext_tables.sql";s:4:"70cf";s:24:"Classes/Hook/Backend.php";s:4:"4c49";s:25:"Classes/Hook/Userauth.php";s:4:"1d44";s:36:"Classes/ToolbarItem/RoleSwitcher.php";s:4:"cff5";s:43:"Resources/Private/Language/locallang_be.xml";s:4:"8e14";s:43:"Resources/Private/Language/locallang_db.xml";s:4:"254f";s:42:"Resources/Public/Icons/SwitchUserGroup.png";s:4:"37b0";s:43:"Resources/Public/Javascript/roleswitcher.js";s:4:"e578";}',
 );
 
