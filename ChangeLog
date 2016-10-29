@@ -1,3 +1,6 @@
+2016-10-29         [RELEASE] Release of begroups_roles 2.0.1 (Nicole Cordes)
+2016-10-29 270d2a2 [TASK] Raise compatibility to TYPO3 8.4.99 (Nicole Cordes)
+
 2016-09-01         [RELEASE] Release of begroups_roles 2.0.0 (Nicole Cordes)
 2016-09-01 469244c [TASK] Add composer.json (Nicole Cordes)
 2016-08-31 91478bb [FEATURE] Add switch for admin users (Nicole Cordes)
