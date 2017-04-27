@@ -38,7 +38,7 @@ define(['jquery'], function($) {
 					role: $(this).data('role')
 				},
 				complete: function() {
-					location.reload();
+					document.location.reload();
 				}
 			});
 		})
