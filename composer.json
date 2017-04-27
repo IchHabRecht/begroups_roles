@@ -18,7 +18,7 @@
   ],
   "license": "GPL-2.0+",
   "require": {
-    "typo3/cms-core": ">=7.6.0,<8.6.0"
+    "typo3/cms-core": ">=7.6 <8.8"
   },
   "suggest": {
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
