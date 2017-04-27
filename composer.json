@@ -20,6 +20,9 @@
   "require": {
     "typo3/cms-core": ">=7.6.0,<8.6.0"
   },
+  "suggest": {
+    "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
+  },
   "autoload": {
     "psr-4": {
       "CPSIT\\BegroupsRoles\\": "Classes/"
