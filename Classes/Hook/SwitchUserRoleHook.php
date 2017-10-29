@@ -44,6 +44,10 @@ class SwitchUserRoleHook
             && strpos($backendUser->user[$backendUser->usergroup_column], ',') !== false
         ) {
             $role = (int)$backendUser->getSessionData('tx_begroupsroles_role');
+            if (empty($role) && !empty($backendUser->user['tx_begroupsroles_limit'])) {
+                $role = (int)array_shift(explode(',', $backendUser->user[$backendUser->usergroup_column], 2));
+                $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $role);
+            }
             if (!empty($role)
                 && GeneralUtility::inList($backendUser->user[$backendUser->usergroup_column], $role)
             ) {
