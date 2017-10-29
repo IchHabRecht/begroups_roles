@@ -3,8 +3,14 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2016-08-30T16:44:44Z" product-name="begroups_roles">
 		<header />
 		<body>
+			<trans-unit id="be_users.tx_begroupsroles_title">
+				<source>Backend user roles</source>
+			</trans-unit>
 			<trans-unit id="be_users.tx_begroupsroles_enabled">
 				<source>Use groups as roles</source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_begroupsroles_limit">
+				<source>Limit to one group only</source>
 			</trans-unit>
 		</body>
 	</file>
