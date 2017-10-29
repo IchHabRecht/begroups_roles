@@ -9,7 +9,7 @@ $tempColumns = [
         'label' => 'LLL:EXT:begroups_roles/Resources/Private/Language/locallang_db.xlf:be_users.tx_begroupsroles_enabled',
         'config' => [
             'type' => 'check',
-            'defaukt' => 0,
+            'default' => 0,
         ],
     ],
 ];
