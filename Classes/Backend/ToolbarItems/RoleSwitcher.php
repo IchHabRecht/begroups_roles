@@ -118,7 +118,7 @@ class RoleSwitcher implements ToolbarItemInterface
         $result = [];
         $result[] = '<ul class="dropdown-list">';
 
-        if (!empty($role)) {
+        if (!empty($role) && empty($this->getBackendUser()->user['tx_begroupsroles_limit'])) {
             $result[] = '<li>';
             $result[] = '<a href="#" class="dropdown-list-link" data-role="0">' . $groupIcon . ' '
                 . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
