@@ -3,6 +3,6 @@
 return [
     'role_switch' => [
         'path' => '/role/switch',
-        'target' => \CPSIT\BegroupsRoles\Backend\ToolbarItems\RoleSwitcher::class . '::switchRoleAction',
+        'target' => \IchHabRecht\BegroupsRoles\Backend\ToolbarItems\RoleSwitcher::class . '::switchRoleAction',
     ],
 ];

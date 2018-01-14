@@ -29,7 +29,7 @@ define(['jquery'], function($) {
 	'use strict';
 
 	$(
-		$('#cpsit-begroupsroles-backend-toolbaritems-roleswitcher').on('click', '.dropdown-menu a', function(evt) {
+		$('#ichhabrecht-begroupsroles-backend-toolbaritems-roleswitcher').on('click', '.dropdown-menu a', function(evt) {
 			evt.preventDefault();
 			$.ajax({
 				url: TYPO3.settings.ajaxUrls['role_switch'],

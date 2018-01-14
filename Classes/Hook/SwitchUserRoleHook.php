@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\BegroupsRoles\Hook;
+namespace IchHabRecht\BegroupsRoles\Hook;
 
 /***************************************************************
  *  Copyright notice

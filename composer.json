@@ -1,5 +1,5 @@
 {
-  "name": "cpsit/begroups-roles",
+  "name": "ichhabrecht/begroups-roles",
   "type": "typo3-cms-extension",
   "description": "Use backend user groups as switchable roles",
   "keywords": [
@@ -8,24 +8,24 @@
     "Group",
     "Backend"
   ],
-  "homepage": "https://github.com/CPS-IT/TYPO3-begroups_roles",
+  "homepage": "https://github.com/IchHabRecht/begroups_roles",
   "authors": [
     {
       "name": "Nicole Cordes",
-      "email": "cordes@cps-it.de",
+      "email": "typo3@cordes.co",
       "role": "Developer"
     }
   ],
   "license": "GPL-2.0+",
   "require": {
-    "typo3/cms-core": ">=7.6 <8.8"
+    "typo3/cms-core": "^7.6 || ^8.7"
   },
   "suggest": {
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
   },
   "autoload": {
     "psr-4": {
-      "CPSIT\\BegroupsRoles\\": "Classes/"
+      "IchHabRecht\\BegroupsRoles\\": "Classes/"
     }
   },
   "replace": {

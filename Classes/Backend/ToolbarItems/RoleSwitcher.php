@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\BegroupsRoles\Backend\ToolbarItems;
+namespace IchHabRecht\BegroupsRoles\Backend\ToolbarItems;
 
 /***************************************************************
  *  Copyright notice
