@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-11-30T13:18:23Z" product-name="begroups_roles">
+        <header />
+        <body>
+            <trans-unit id="tx_begroupsroles_enabled.description">
+                <source>Adds a toolbar icon to be able to switch to one of the defined groups only.</source>
+                <target>Fügt der Toolbar ein Icon hinzu, um nur eine der definierten Gruppen zu nutzen.</target>
+            </trans-unit>
+            <trans-unit id="tx_begroupsroles_limit.description">
+                <source>Ensures only one group of the defined ones can be used simultaneously. On login the first group is used as default.</source>
+                <target>Stellt sicher, dass nur eine der definierten Gruppen zeitgleich genutzt werden kann. Nach dem Login wird die erste Gruppe als Standard verwendet.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
