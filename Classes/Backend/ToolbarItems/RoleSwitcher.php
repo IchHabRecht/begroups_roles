@@ -178,18 +178,12 @@ class RoleSwitcher implements ToolbarItemInterface
     {
         $backendUser = $this->getBackendUser();
 
-        $role = (int)GeneralUtility::_POST('role');
-        if ($role <= 0) {
-            $role = 0;
-        } else {
-            if (!$this->checkAccess()) {
-                $role = 0;
-            } elseif (!array_key_exists($role, $this->groups)) {
-                $role = 0;
-            }
+        $newRole = (int)GeneralUtility::_POST('role');
+        if ($newRole <= 0 || !GeneralUtility::inList($backendUser->user['tx_begroupsroles_groups'], $newRole)) {
+            $newRole = 0;
         }
 
-        $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $role);
+        $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $newRole);
 
         return $response;
     }

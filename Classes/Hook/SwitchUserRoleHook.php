@@ -43,45 +43,45 @@ class SwitchUserRoleHook
     {
         $backendUser = $this->getBackendUser();
 
-        if (!empty($backendUser->user['tx_begroupsroles_enabled'])) {
-            $role = $backendUser->getSessionData('tx_begroupsroles_role');
-            if ($role === null) {
-                $role = 0;
-                $backendUser->user['tx_begroupsroles_groups'] = implode(',', $this->getUsergroups($backendUser->user[$backendUser->usergroup_column]));
-                $this->getDatabaseConnection()->exec_UPDATEquery(
-                    $backendUser->user_table,
-                    'uid=' . $backendUser->user['uid'],
-                    [
-                        'tx_begroupsroles_groups' => $backendUser->user['tx_begroupsroles_groups'],
-                    ]
-                );
-            }
-            if (empty($role) && !empty($backendUser->user['tx_begroupsroles_limit'])) {
-                $databaseConnection = $this->getDatabaseConnection();
-                $possibleUsergroups = $databaseConnection->cleanIntList($backendUser->user['tx_begroupsroles_groups']);
-                $group = $databaseConnection->exec_SELECTgetSingleRow(
-                    'uid',
-                    $backendUser->usergroup_table,
-                    'uid IN (' . $possibleUsergroups . ') AND tx_begroupsroles_isrole=1'
-                    . BackendUtility::deleteClause($backendUser->usergroup_table),
-                    '',
-                    'FIND_IN_SET(uid, ' . $databaseConnection->fullQuoteStr($possibleUsergroups, $backendUser->usergroup_table) . ')'
-                );
-                $role = !empty($group['uid']) ? (int)$group['uid'] : 0;
-            }
-            if (!empty($role)
-                && GeneralUtility::inList($backendUser->user['tx_begroupsroles_groups'], $role)
-            ) {
-                $backendUser->user[$backendUser->usergroup_column] = $role;
-                if (!empty($backendUser->user['admin'])) {
-                    $backendUser->user['options'] |= Permission::PAGE_SHOW | Permission::PAGE_EDIT;
-                    $backendUser->user['admin'] = 0;
-                }
-            } else {
-                $role = 0;
-            }
-            $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $role);
+        if (empty($backendUser->user['tx_begroupsroles_enabled'])) {
+            return;
         }
+
+        $role = $backendUser->getSessionData('tx_begroupsroles_role');
+        if ($role === null) {
+            $role = 0;
+            $backendUser->user['tx_begroupsroles_groups'] = implode(',', $this->getUsergroups($backendUser->user[$backendUser->usergroup_column]));
+            $this->getDatabaseConnection()->exec_UPDATEquery(
+                $backendUser->user_table,
+                'uid=' . $backendUser->user['uid'],
+                [
+                    'tx_begroupsroles_groups' => $backendUser->user['tx_begroupsroles_groups'],
+                ]
+            );
+        }
+        if (empty($role) && !empty($backendUser->user['tx_begroupsroles_limit'])) {
+            $databaseConnection = $this->getDatabaseConnection();
+            $possibleUsergroups = $databaseConnection->cleanIntList($backendUser->user['tx_begroupsroles_groups']);
+            $group = $databaseConnection->exec_SELECTgetSingleRow(
+                'uid',
+                $backendUser->usergroup_table,
+                'uid IN (' . $possibleUsergroups . ') AND tx_begroupsroles_isrole=1'
+                . BackendUtility::deleteClause($backendUser->usergroup_table),
+                '',
+                'FIND_IN_SET(uid, ' . $databaseConnection->fullQuoteStr($possibleUsergroups, $backendUser->usergroup_table) . ')'
+            );
+            $role = !empty($group['uid']) ? (int)$group['uid'] : 0;
+        }
+        if (!empty($role) && GeneralUtility::inList($backendUser->user['tx_begroupsroles_groups'], $role)) {
+            $backendUser->user[$backendUser->usergroup_column] = $role;
+            if (!empty($backendUser->user['admin'])) {
+                $backendUser->user['options'] |= Permission::PAGE_SHOW | Permission::PAGE_EDIT;
+                $backendUser->user['admin'] = 0;
+            }
+        } else {
+            $role = 0;
+        }
+        $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $role);
     }
 
     /**
