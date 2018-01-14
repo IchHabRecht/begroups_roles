@@ -48,6 +48,11 @@ class RoleSwitcher implements ToolbarItemInterface
     protected $groups = [];
 
     /**
+     * @var int
+     */
+    protected $role = 0;
+
+    /**
      * Checks whether the user has access to this toolbar item
      *
      * @return  bool
@@ -56,20 +61,25 @@ class RoleSwitcher implements ToolbarItemInterface
     {
         // The raw user record is needed to check for proper group settings
         $backendUser = $this->getBackendUser();
-        $userRecord = BackendUtility::getRecord($backendUser->user_table, $backendUser->user['uid']);
+
+        if (empty($backendUser->user['tx_begroupsroles_enabled'])) {
+            return false;
+        }
+
+        $this->role = (int)$backendUser->getSessionData('tx_begroupsroles_role');
 
         $this->groups = $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid, title',
             $backendUser->usergroup_table,
-            'uid IN (' . $this->getDatabaseConnection()->cleanIntList($userRecord[$backendUser->usergroup_column]) . ')',
+            'uid IN (' . $backendUser->user['tx_begroupsroles_groups'] . ')'
+            . ' AND tx_begroupsroles_isrole=1' . BackendUtility::deleteClause($backendUser->usergroup_table),
             '',
             'title ASC',
             '',
             'uid'
         );
 
-        return !empty($userRecord['tx_begroupsroles_enabled'])
-            && strpos($userRecord[$backendUser->usergroup_column], ',') !== false;
+        return !empty($this->groups);
     }
 
     /**
@@ -83,9 +93,8 @@ class RoleSwitcher implements ToolbarItemInterface
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $title = $this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:switch_group');
-        $role = $this->getBackendUser()->getSessionData('tx_begroupsroles_role');
-        $groupTitle = !empty($this->groups[$role])
-            ? $this->groups[$role]['title']
+        $groupTitle = !empty($this->groups[$this->role])
+            ? $this->groups[$this->role]['title']
             : $this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups');
 
         return '<span title="' . htmlspecialchars($title) . '">'
@@ -113,12 +122,11 @@ class RoleSwitcher implements ToolbarItemInterface
     {
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $groupIcon = $iconFactory->getIcon('status-user-group-backend', Icon::SIZE_SMALL)->render('inline');
-        $role = $this->getBackendUser()->getSessionData('tx_begroupsroles_role');
 
         $result = [];
         $result[] = '<ul class="dropdown-list">';
 
-        if (!empty($role) && empty($this->getBackendUser()->user['tx_begroupsroles_limit'])) {
+        if (!empty($this->role) && empty($this->getBackendUser()->user['tx_begroupsroles_limit'])) {
             $result[] = '<li>';
             $result[] = '<a href="#" class="dropdown-list-link" data-role="0">' . $groupIcon . ' '
                 . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
@@ -127,7 +135,7 @@ class RoleSwitcher implements ToolbarItemInterface
         }
 
         foreach ($this->groups as $group) {
-            if ((int)$role !== (int)$group['uid']) {
+            if ($this->role !== (int)$group['uid']) {
                 $result[] = '<li>';
                 $result[] = '<a href="#" class="dropdown-list-link" data-role="' . (int)$group['uid'] . '">'
                     . $groupIcon . ' ' . htmlspecialchars($group['title'])
@@ -174,8 +182,9 @@ class RoleSwitcher implements ToolbarItemInterface
         if ($role <= 0) {
             $role = 0;
         } else {
-            $userRecord = BackendUtility::getRecord('be_users', $backendUser->user['uid']);
-            if (!GeneralUtility::inList($userRecord[$backendUser->usergroup_column], $role)) {
+            if (!$this->checkAccess()) {
+                $role = 0;
+            } elseif (!array_key_exists($role, $this->groups)) {
                 $role = 0;
             }
         }

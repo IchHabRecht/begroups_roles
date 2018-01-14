@@ -3,6 +3,12 @@
 	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2016-08-30T16:54:31Z" product-name="begroups_roles">
 		<header />
 		<body>
+			<trans-unit id="be_groups.tx_begroupsroles_title">
+				<target>Backend-Benutzer-Rollen</target>
+			</trans-unit>
+			<trans-unit id="be_groups.tx_begroupsroles_isrole">
+				<target>Diese Gruppe als Rolle verwenden</target>
+			</trans-unit>
 			<trans-unit id="be_users.tx_begroupsroles_title">
 				<target>Backend-Benutzer-Rollen</target>
 			</trans-unit>

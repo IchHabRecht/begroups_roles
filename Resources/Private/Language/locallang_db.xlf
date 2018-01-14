@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2016-08-30T16:44:44Z" product-name="begroups_roles">
-		<header />
-		<body>
-			<trans-unit id="be_users.tx_begroupsroles_title">
-				<source>Backend user roles</source>
-			</trans-unit>
-			<trans-unit id="be_users.tx_begroupsroles_enabled">
-				<source>Use groups as roles</source>
-			</trans-unit>
-			<trans-unit id="be_users.tx_begroupsroles_limit">
-				<source>Restrict to one group</source>
-			</trans-unit>
-		</body>
-	</file>
+    <file source-language="en" datatype="plaintext" original="messages" date="2016-08-30T16:44:44Z" product-name="begroups_roles">
+        <header />
+        <body>
+            <trans-unit id="be_groups.tx_begroupsroles_title">
+                <source>Backend group roles</source>
+            </trans-unit>
+            <trans-unit id="be_groups.tx_begroupsroles_isrole">
+                <source>Use this group as role</source>
+            </trans-unit>
+            <trans-unit id="be_users.tx_begroupsroles_title">
+                <source>Backend user roles</source>
+            </trans-unit>
+            <trans-unit id="be_users.tx_begroupsroles_enabled">
+                <source>Use groups as roles</source>
+            </trans-unit>
+            <trans-unit id="be_users.tx_begroupsroles_limit">
+                <source>Restrict to one group</source>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>

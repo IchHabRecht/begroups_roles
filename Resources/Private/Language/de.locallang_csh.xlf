@@ -3,6 +3,10 @@
     <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-11-30T13:18:23Z" product-name="begroups_roles">
         <header />
         <body>
+            <trans-unit id="tx_begroupsroles_isrole.description">
+                <source>Adds a toolbar icon for a user to be able to switch to this groups only.</source>
+                <target>Fügt der Toolbar für den Benutzer ein Icon hinzu, um nur diese Gruppe zu nutzen.</target>
+            </trans-unit>
             <trans-unit id="tx_begroupsroles_enabled.description">
                 <source>Adds a toolbar icon to be able to switch to one of the defined groups only.</source>
                 <target>Fügt der Toolbar ein Icon hinzu, um nur eine der definierten Gruppen zu nutzen.</target>
