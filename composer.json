@@ -20,12 +20,20 @@
   "require": {
     "typo3/cms-core": "^7.6 || ^8.7"
   },
+  "require-dev": {
+    "nimut/testing-framework": "2.x-dev || 3.x-dev"
+  },
   "suggest": {
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
   },
   "autoload": {
     "psr-4": {
       "IchHabRecht\\BegroupsRoles\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "IchHabRecht\\BegroupsRoles\\Tests\\": "Tests/"
     }
   },
   "replace": {
