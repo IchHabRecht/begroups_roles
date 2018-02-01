@@ -27,6 +27,7 @@ namespace IchHabRecht\BegroupsRoles\Tests\Functional\Backend\ToolbarItems;
 
 use IchHabRecht\BegroupsRoles\Backend\ToolbarItems\RoleSwitcher;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Core\Bootstrap;
 
 class RoleSwitcherTest extends FunctionalTestCase
 {
@@ -49,6 +50,8 @@ class RoleSwitcherTest extends FunctionalTestCase
         $fixturePath = ORIGINAL_ROOT . 'typo3conf/ext/begroups_roles/Tests/Functional/Fixtures/Database/';
         $this->importDataSet($fixturePath . 'be_groups.xml');
         $this->importDataSet($fixturePath . 'be_users.xml');
+
+        Bootstrap::getInstance()->initializeLanguageObject();
 
         $this->roleSwitcher = new RoleSwitcher();
     }
@@ -82,5 +85,37 @@ class RoleSwitcherTest extends FunctionalTestCase
         $this->setUpBackendUserFromFixture(3);
 
         $this->assertTrue($this->roleSwitcher->checkAccess());
+    }
+
+    /**
+     * @test
+     */
+    public function getItemReturnsAllGroupsLabel()
+    {
+        $this->setUpBackendUserFromFixture(3);
+
+        $this->assertContains('[All groups]', $this->roleSwitcher->getItem());
+    }
+
+    /**
+     * @test
+     */
+    public function getItemNotReturnsAllGroupsLabelForLimitedUser()
+    {
+        $this->setUpBackendUserFromFixture(4);
+
+        $this->assertTrue($this->roleSwitcher->checkAccess());
+        $this->assertNotContains('[All groups]', $this->roleSwitcher->getItem());
+    }
+
+    /**
+     * @test
+     */
+    public function getItemReturnsFirstGroupForLimitedUser()
+    {
+        $this->setUpBackendUserFromFixture(4);
+
+        $this->assertTrue($this->roleSwitcher->checkAccess());
+        $this->assertContains('[Maintain News]', $this->roleSwitcher->getItem());
     }
 }
