@@ -24,11 +24,12 @@ before_install:
   - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
 
 install:
+  - if [ "$TRAVIS_PHP_VERSION" == "5.5" ] || [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then composer remove --dev --no-update nimut/phpunit-merger; fi;
   - >
     if [[ "$TYPO3" = *"dev"* ]]; then
       composer config minimum-stability dev;
       composer config prefer-stable true;
-      composer require nimut/typo3-complete="$TYPO3" typo3/cms-core="@dev" --no-update;
+      composer remove --no-update typo3/cms-core;
     fi
   - composer require nimut/typo3-complete="$TYPO3"
   - mkdir -p .Build/Web/typo3conf/ext/
@@ -144,8 +145,30 @@ jobs:
       before_install: skip
       install:
         - composer require nimut/typo3-complete="$TYPO3"
+        - mkdir -p .Build/Web/typo3conf/ext/ .Log/coverage/ .Log/log/
+        - if [ ! -L .Build/Web/typo3conf/ext/begroups_roles ]; then ln -snvf ../../../../. .Build/Web/typo3conf/ext/begroups_roles; fi
+        - export TYPO3_PATH_ROOT=$PWD/.Build/Web
+        - export typo3DatabaseName=typo3
+        - export typo3DatabaseHost=localhost
+        - export typo3DatabaseUsername=root
+        - export typo3DatabasePassword=
       before_script:
       script:
+        - >
+          echo;
+          echo "Running functional tests";
+          echo;
+          echo;
+          .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml --log-junit .Log/log/functional.xml --coverage-php .Log/coverage/functional.cov --whitelist Classes Tests/Functional/;
+
+        - >
+          echo;
+          echo "Merging log and coverage files";
+          echo;
+          echo;
+          .Build/bin/phpunit-merger coverage .Log/coverage/ .Log/coverage.xml;
+          .Build/bin/phpunit-merger log .Log/log/ .Log/log.xml;
+
         - git fetch --unshallow || true
 
         - >
