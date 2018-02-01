@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <be_groups>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>All users</title>
+        <tx_begroupsroles_isrole>0</tx_begroupsroles_isrole>
+    </be_groups>
+    <be_groups>
+        <uid>2</uid>
+        <pid>0</pid>
+        <title>Advanced editors</title>
+        <subgroup>1</subgroup>
+        <tx_begroupsroles_isrole>0</tx_begroupsroles_isrole>
+    </be_groups>
+    <be_groups>
+        <uid>3</uid>
+        <pid>0</pid>
+        <title>Simple editors</title>
+        <subgroup>1,4</subgroup>
+        <tx_begroupsroles_isrole>0</tx_begroupsroles_isrole>
+    </be_groups>
+    <be_groups>
+        <uid>4</uid>
+        <pid>0</pid>
+        <title>Maintain News</title>
+        <subgroup>0</subgroup>
+        <tx_begroupsroles_isrole>1</tx_begroupsroles_isrole>
+    </be_groups>
+</dataset>

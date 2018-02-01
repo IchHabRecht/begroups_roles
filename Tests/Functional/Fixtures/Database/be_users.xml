@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <be_users>
+        <uid>2</uid>
+        <pid>0</pid>
+        <username>advanced_editor</username>
+        <usergroup>2</usergroup>
+        <disableIPlock>1</disableIPlock>
+        <tx_begroupsroles_enabled>0</tx_begroupsroles_enabled>
+    </be_users>
+    <be_users>
+        <uid>3</uid>
+        <pid>0</pid>
+        <username>simple_editor</username>
+        <usergroup>3</usergroup>
+        <disableIPlock>1</disableIPlock>
+        <tx_begroupsroles_enabled>1</tx_begroupsroles_enabled>
+    </be_users>
+    <be_users>
+        <uid>4</uid>
+        <pid>0</pid>
+        <username>limited_editor</username>
+        <usergroup>3</usergroup>
+        <disableIPlock>1</disableIPlock>
+        <tx_begroupsroles_enabled>1</tx_begroupsroles_enabled>
+        <tx_begroupsroles_limit>1</tx_begroupsroles_limit>
+    </be_users>
+</dataset>
