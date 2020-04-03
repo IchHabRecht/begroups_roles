@@ -25,12 +25,12 @@ namespace IchHabRecht\BegroupsRoles\Backend\ToolbarItems;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Connection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -43,6 +43,31 @@ use TYPO3\CMS\Lang\LanguageService;
 class RoleSwitcher implements ToolbarItemInterface
 {
     /**
+     * @var BackendUserAuthentication
+     */
+    protected $backendUser;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var IconFactory
+     */
+    private $iconFactory;
+
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
+
+    /**
+     * @var PageRenderer
+     */
+    protected $pageRenderer;
+
+    /**
      * @var array
      */
     protected $groups = [];
@@ -52,6 +77,20 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     protected $role = 0;
 
+    public function __construct(
+        BackendUserAuthentication $backendUser = null,
+        Connection $connection = null,
+        IconFactory $iconFactory = null,
+        LanguageService $languageService = null,
+        PageRenderer $pageRenderer = null
+    ) {
+        $this->backendUser = $backendUser ?: $GLOBALS['BE_USER'];
+        $this->connection = $connection ?: GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->backendUser->user_table);
+        $this->iconFactory = $iconFactory ?: GeneralUtility::makeInstance(IconFactory::class);
+        $this->languageService = $languageService ?: $GLOBALS['LANG'];
+        $this->pageRenderer = $pageRenderer ?: GeneralUtility::makeInstance(PageRenderer::class);
+    }
+
     /**
      * Checks whether the user has access to this toolbar item
      *
@@ -59,25 +98,34 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function checkAccess()
     {
-        // The raw user record is needed to check for proper group settings
-        $backendUser = $this->getBackendUser();
-
-        if (empty($backendUser->user['tx_begroupsroles_enabled'])) {
+        if (empty($this->backendUser->user['tx_begroupsroles_enabled'])) {
             return false;
         }
 
-        $this->role = (int)$backendUser->getSessionData('tx_begroupsroles_role');
+        $this->role = (int)$this->backendUser->getSessionData('tx_begroupsroles_role');
 
-        $this->groups = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'uid, title',
-            $backendUser->usergroup_table,
-            'uid IN (' . $backendUser->user['tx_begroupsroles_groups'] . ')'
-            . ' AND tx_begroupsroles_isrole=1' . BackendUtility::deleteClause($backendUser->usergroup_table),
-            '',
-            'title ASC',
-            '',
-            'uid'
-        );
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $expressionBuilder = $queryBuilder->expr();
+        $rows = $queryBuilder->select('uid', 'title')
+            ->from($this->backendUser->usergroup_table)
+            ->where(
+                $expressionBuilder->in(
+                    'uid',
+                    $queryBuilder->createNamedParameter(
+                        GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'], true),
+                        Connection::PARAM_INT_ARRAY
+                    )
+                ),
+                $expressionBuilder->eq(
+                    'tx_begroupsroles_isrole',
+                    $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)
+                )
+            )
+            ->orderBy('title')
+            ->execute()
+            ->fetchAll();
+
+        $this->groups = array_combine(array_map('intval', array_column($rows, 'uid')), $rows);
 
         return !empty($this->groups);
     }
@@ -89,16 +137,15 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function getItem()
     {
-        $this->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher');
+        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher');
 
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $title = $this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:switch_group');
+        $title = $this->languageService->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:switch_group');
         $groupTitle = !empty($this->groups[$this->role])
             ? $this->groups[$this->role]['title']
-            : $this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups');
+            : $this->languageService->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups');
 
         return '<span title="' . htmlspecialchars($title) . '">'
-            . $iconFactory->getIcon('begroups-roles-switchUserGroup', Icon::SIZE_SMALL)->render()
+            . $this->iconFactory->getIcon('begroups-roles-switchUserGroup', Icon::SIZE_SMALL)->render()
             . ' [' . htmlspecialchars($groupTitle) . ']'
             . '</span>';
     }
@@ -120,16 +167,15 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function getDropDown()
     {
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $groupIcon = $iconFactory->getIcon('status-user-group-backend', Icon::SIZE_SMALL)->render('inline');
+        $groupIcon = $this->iconFactory->getIcon('status-user-group-backend', Icon::SIZE_SMALL)->render('inline');
 
         $result = [];
         $result[] = '<ul class="dropdown-list">';
 
-        if (!empty($this->role) && empty($this->getBackendUser()->user['tx_begroupsroles_limit'])) {
+        if (!empty($this->role) && empty($this->backendUser->user['tx_begroupsroles_limit'])) {
             $result[] = '<li>';
             $result[] = '<a href="#" class="dropdown-list-link" data-role="0">' . $groupIcon . ' '
-                . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
+                . htmlspecialchars($this->languageService->sL('LLL:EXT:begroups_roles/Resources/Private/Language/locallang_be.xlf:all_groups'))
                 . '</a>';
             $result[] = '</li>';
         }
@@ -176,47 +222,13 @@ class RoleSwitcher implements ToolbarItemInterface
      */
     public function switchRoleAction(ServerRequestInterface $request, ResponseInterface $response)
     {
-        $backendUser = $this->getBackendUser();
-
         $newRole = (int)GeneralUtility::_POST('role');
-        if ($newRole <= 0 || !GeneralUtility::inList($backendUser->user['tx_begroupsroles_groups'], $newRole)) {
+        if ($newRole <= 0 || !GeneralUtility::inList($this->backendUser->user['tx_begroupsroles_groups'], $newRole)) {
             $newRole = 0;
         }
 
-        $backendUser->setAndSaveSessionData('tx_begroupsroles_role', $newRole);
+        $this->backendUser->setAndSaveSessionData('tx_begroupsroles_role', $newRole);
 
         return $response;
-    }
-
-    /**
-     * @return BackendUserAuthentication
-     */
-    protected function getBackendUser()
-    {
-        return $GLOBALS['BE_USER'];
-    }
-
-    /**
-     * @return DatabaseConnection
-     */
-    protected function getDatabaseConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
-    }
-
-    /**
-     * @return LanguageService
-     */
-    protected function getLanguageService()
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    /**
-     * @return PageRenderer
-     */
-    protected function getPageRenderer()
-    {
-        return GeneralUtility::makeInstance(PageRenderer::class);
     }
 }

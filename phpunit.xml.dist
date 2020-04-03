@@ -11,7 +11,7 @@
     executionOrder="depends,defects"
     forceCoversAnnotation="false"
     ignoreDeprecatedCodeUnitsFromCodeCoverage="true"
-    processIsolation="true"
+    processIsolation="false"
     stopOnError="false"
     stopOnFailure="false"
     stopOnIncomplete="false"

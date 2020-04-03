@@ -38,11 +38,6 @@ class RoleSwitcherTest extends FunctionalTestCase
         'typo3conf/ext/begroups_roles',
     ];
 
-    /**
-     * @var RoleSwitcher
-     */
-    protected $roleSwitcher;
-
     protected function setUp()
     {
         parent::setUp();
@@ -52,8 +47,6 @@ class RoleSwitcherTest extends FunctionalTestCase
         $this->importDataSet($fixturePath . 'be_users.xml');
 
         Bootstrap::getInstance()->initializeLanguageObject();
-
-        $this->roleSwitcher = new RoleSwitcher();
     }
 
     /**
@@ -62,8 +55,9 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function checkAccessReturnsFalseWhenBeUsersFlagNotSet()
     {
         $this->setUpBackendUserFromFixture(2);
+        $roleSwitcher = new RoleSwitcher();
 
-        $this->assertFalse($this->roleSwitcher->checkAccess());
+        $this->assertFalse($roleSwitcher->checkAccess());
     }
 
     /**
@@ -72,9 +66,10 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function checkAccessReturnsFalseWhenBeUsersFlagSetWithoutRoles()
     {
         $this->setUpBackendUserFromFixture(3);
+        $roleSwitcher = new RoleSwitcher();
         $this->getDatabaseConnection()->updateArray('be_groups', ['pid' => 0], ['tx_begroupsroles_isrole' => 0]);
 
-        $this->assertFalse($this->roleSwitcher->checkAccess());
+        $this->assertFalse($roleSwitcher->checkAccess());
     }
 
     /**
@@ -83,8 +78,9 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function checkAccessReturnsTrueWhenBeUsersFlagSetWithRoles()
     {
         $this->setUpBackendUserFromFixture(3);
+        $roleSwitcher = new RoleSwitcher();
 
-        $this->assertTrue($this->roleSwitcher->checkAccess());
+        $this->assertTrue($roleSwitcher->checkAccess());
     }
 
     /**
@@ -93,8 +89,9 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function getItemReturnsAllGroupsLabel()
     {
         $this->setUpBackendUserFromFixture(3);
+        $roleSwitcher = new RoleSwitcher();
 
-        $this->assertContains('[All groups]', $this->roleSwitcher->getItem());
+        $this->assertContains('[All groups]', $roleSwitcher->getItem());
     }
 
     /**
@@ -103,9 +100,10 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function getItemNotReturnsAllGroupsLabelForLimitedUser()
     {
         $this->setUpBackendUserFromFixture(4);
+        $roleSwitcher = new RoleSwitcher();
 
-        $this->assertTrue($this->roleSwitcher->checkAccess());
-        $this->assertNotContains('[All groups]', $this->roleSwitcher->getItem());
+        $this->assertTrue($roleSwitcher->checkAccess());
+        $this->assertNotContains('[All groups]', $roleSwitcher->getItem());
     }
 
     /**
@@ -114,8 +112,9 @@ class RoleSwitcherTest extends FunctionalTestCase
     public function getItemReturnsFirstGroupForLimitedUser()
     {
         $this->setUpBackendUserFromFixture(4);
+        $roleSwitcher = new RoleSwitcher();
 
-        $this->assertTrue($this->roleSwitcher->checkAccess());
-        $this->assertContains('[Maintain News]', $this->roleSwitcher->getItem());
+        $this->assertTrue($roleSwitcher->checkAccess());
+        $this->assertContains('[Maintain News]', $roleSwitcher->getItem());
     }
 }
