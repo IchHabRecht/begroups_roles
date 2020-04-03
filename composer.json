@@ -1,54 +1,51 @@
 {
-  "name": "ichhabrecht/begroups-roles",
-  "type": "typo3-cms-extension",
-  "description": "Use backend user groups as switchable roles",
-  "keywords": [
-    "TYPO3",
-    "User",
-    "Group",
-    "Backend"
-  ],
-  "homepage": "https://github.com/IchHabRecht/begroups_roles",
-  "authors": [
-    {
-      "name": "Nicole Cordes",
-      "email": "typo3@cordes.co",
-      "role": "Developer"
+    "name": "ichhabrecht/begroups-roles",
+    "type": "typo3-cms-extension",
+    "description": "Use backend user groups as switchable roles",
+    "keywords": [
+        "TYPO3",
+        "User",
+        "Group",
+        "Backend"
+    ],
+    "homepage": "https://github.com/IchHabRecht/begroups_roles",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Nicole Cordes",
+            "email": "typo3@cordes.co",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "typo3/cms-core": "^7.6 || ^8.7"
+    },
+    "require-dev": {
+        "nimut/testing-framework": "2.x-dev || 4.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "IchHabRecht\\BegroupsRoles\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IchHabRecht\\BegroupsRoles\\Tests\\": "Tests/"
+        }
+    },
+    "replace": {
+        "typo3-ter/begroups-roles": "self.version"
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "begroups_roles",
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "app-dir": ".Build",
+            "web-dir": ".Build/public"
+        }
     }
-  ],
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "typo3/cms-core": "^7.6 || ^8.7"
-  },
-  "require-dev": {
-    "nimut/testing-framework": "2.x-dev || 3.x-dev",
-    "nimut/phpunit-merger": "^0.1"
-  },
-  "suggest": {
-    "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
-  },
-  "autoload": {
-    "psr-4": {
-      "IchHabRecht\\BegroupsRoles\\": "Classes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "IchHabRecht\\BegroupsRoles\\Tests\\": "Tests/"
-    }
-  },
-  "replace": {
-    "begroups_roles": "self.version",
-    "typo3-ter/begroups-roles": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
-  },
-  "extra": {
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
-    }
-  }
 }
