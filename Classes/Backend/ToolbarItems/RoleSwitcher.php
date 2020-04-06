@@ -31,11 +31,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Renders roles switcher to toolbar
@@ -81,7 +82,7 @@ class RoleSwitcher implements ToolbarItemInterface
         BackendUserAuthentication $backendUser = null,
         Connection $connection = null,
         IconFactory $iconFactory = null,
-        LanguageService $languageService = null,
+        $languageService = null,
         PageRenderer $pageRenderer = null
     ) {
         $this->backendUser = $backendUser ?: $GLOBALS['BE_USER'];
@@ -217,10 +218,9 @@ class RoleSwitcher implements ToolbarItemInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function switchRoleAction(ServerRequestInterface $request, ResponseInterface $response)
+    public function switchRoleAction(ServerRequestInterface $request)
     {
         $newRole = (int)GeneralUtility::_POST('role');
         if ($newRole <= 0 || !GeneralUtility::inList($this->backendUser->user['tx_begroupsroles_groups'], $newRole)) {
@@ -229,6 +229,6 @@ class RoleSwitcher implements ToolbarItemInterface
 
         $this->backendUser->setAndSaveSessionData('tx_begroupsroles_role', $newRole);
 
-        return $response;
+        return new NullResponse();
     }
 }

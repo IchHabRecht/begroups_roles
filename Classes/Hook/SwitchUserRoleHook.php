@@ -27,6 +27,8 @@ namespace IchHabRecht\BegroupsRoles\Hook;
 
 use Doctrine\DBAL\Connection;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -109,6 +111,15 @@ class SwitchUserRoleHook
             if (!empty($this->backendUser->user['admin'])) {
                 $this->backendUser->user['options'] |= Permission::PAGE_SHOW | Permission::PAGE_EDIT;
                 $this->backendUser->user['admin'] = 0;
+            }
+            if (class_exists('TYPO3\\CMS\\Core\\Context\\Context')) {
+                GeneralUtility::makeInstance(Context::class)->setAspect(
+                    'backend.user',
+                    GeneralUtility::makeInstance(
+                        UserAspect::class,
+                        $this->backendUser
+                    )
+                );
             }
         } else {
             $role = 0;

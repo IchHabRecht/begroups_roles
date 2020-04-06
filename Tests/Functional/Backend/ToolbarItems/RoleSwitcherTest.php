@@ -46,7 +46,12 @@ class RoleSwitcherTest extends FunctionalTestCase
         $this->importDataSet($fixturePath . 'be_groups.xml');
         $this->importDataSet($fixturePath . 'be_users.xml');
 
-        Bootstrap::getInstance()->initializeLanguageObject();
+        if (method_exists(Bootstrap::class, 'getInstance')) {
+            $bootstrap = Bootstrap::getInstance();
+        } else {
+            $bootstrap = Bootstrap::class;
+        }
+        call_user_func([$bootstrap, 'initializeLanguageObject']);
     }
 
     /**
