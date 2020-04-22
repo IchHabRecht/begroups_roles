@@ -1,3 +1,6 @@
+2020-04-22         [RELEASE] Release of begroups_roles 3.1.2 (Nicole Cordes)
+2020-04-22 f3c1969 [BUGFIX] Preserve usergroup ordering for group detection (Nicole Cordes)
+
 2020-04-22         [RELEASE] Release of begroups_roles 3.1.1 (Nicole Cordes)
 2020-04-22 afd4476 [TASK] Raise compatibility to TYPO3 10.4 (Nicole Cordes)
 
