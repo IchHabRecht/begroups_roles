@@ -69,7 +69,12 @@ class SwitchUserRoleHook
         $role = $this->backendUser->getSessionData('tx_begroupsroles_role');
         if ($role === null) {
             $role = 0;
-            $this->backendUser->user['tx_begroupsroles_groups'] = implode(',', $this->getUsergroups($this->backendUser->user[$this->backendUser->usergroup_column]));
+
+            $usergroups = $this->backendUser->user[$this->backendUser->usergroup_column];
+            $this->backendUser->user['tx_begroupsroles_groups'] = implode(',', array_unique(array_merge(
+                GeneralUtility::intExplode(',', $usergroups, true),
+                $this->getUsergroups($usergroups)
+            )));
             $queryBuilder = $this->connection->createQueryBuilder();
             $queryBuilder->update($this->backendUser->user_table)
                 ->where(
