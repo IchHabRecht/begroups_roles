@@ -3,7 +3,7 @@
     <be_users>
         <uid>2</uid>
         <pid>0</pid>
-        <username>advanced_editor</username>
+        <username>advanced_editor_disabled</username>
         <usergroup>2</usergroup>
         <disableIPlock>1</disableIPlock>
         <tx_begroupsroles_enabled>0</tx_begroupsroles_enabled>
@@ -11,16 +11,24 @@
     <be_users>
         <uid>3</uid>
         <pid>0</pid>
-        <username>simple_editor</username>
-        <usergroup>3</usergroup>
+        <username>advance_editor_enabled</username>
+        <usergroup>2</usergroup>
         <disableIPlock>1</disableIPlock>
         <tx_begroupsroles_enabled>1</tx_begroupsroles_enabled>
     </be_users>
     <be_users>
         <uid>4</uid>
         <pid>0</pid>
-        <username>limited_editor</username>
+        <username>simple_editor</username>
         <usergroup>3</usergroup>
+        <disableIPlock>1</disableIPlock>
+        <tx_begroupsroles_enabled>1</tx_begroupsroles_enabled>
+    </be_users>
+    <be_users>
+        <uid>5</uid>
+        <pid>0</pid>
+        <username>limited_editor</username>
+        <usergroup>6,2,5</usergroup>
         <disableIPlock>1</disableIPlock>
         <tx_begroupsroles_enabled>1</tx_begroupsroles_enabled>
         <tx_begroupsroles_limit>1</tx_begroupsroles_limit>
